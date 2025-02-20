@@ -1,0 +1,192 @@
+{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang1033{\fonttbl{\f0\fnil\fcharset0 Calibri;}{\f1\fswiss\fcharset0 Calibri;}{\f2\fswiss Calibri;}}
+{\colortbl ;\red0\green0\blue0;}
+{\*\generator Riched20 10.0.19041}\viewkind4\uc1 
+\pard\sa200\sl276\slmult1\f0\fs22\lang9\par
+\cf1\b\f1\fs28 Q1 :Describe the steps needed to create a custom Gutenberg block that displays a list of books from the books post type. \cf0\b0\f0\par
+\fs36 1. Gutenberg Integration\fs22\par
+
+\pard 
+{\pntext\f0 1.\tab}{\*\pn\pnlvlbody\pnf0\pnindent0\pnstart1\pndec{\pntxta.}}
+\fi-360\li720\sa200\sl276\slmult1  In theme's functions.php, first need to include the gutenberg.php file from the inc folder. \par
+{\pntext\f0 2.\tab}Include Block Registration and Initialization: Inside the inc/gutenberg.php file, you define the function book_gutenberg_blocks which registers the custom block using wp_register_script and register_block_type.\par
+{\pntext\f0 3.\tab}wp_register_script: This function registers your JavaScript file that contains the block logic \par
+{\pntext\f0 4.\tab}register_block_type: Registers the custom block with a unique name (book/custom-cpt-book) and specifies the editor script.\par
+
+\pard\sa200\sl276\slmult1\fs36 2. Register Gutenberg Block Script\par
+
+\pard 
+{\pntext\f0 1.\tab}{\*\pn\pnlvlbody\pnf0\pnindent0\pnstart1\pndec{\pntxta.}}
+\fi-360\li720\sa200\sl276\slmult1\fs22 Create the book_gutenberg_blocks Function: This function hooks into WordPress's init action and registers the custom block by linking the script to it.\par
+{\pntext\f0 2.\tab}JS  to Display Books\par
+{\pntext\f0 3.\tab}The registerBlockType function is where you define the custom Gutenberg block. .\par
+{\pntext\f0 4.\tab}Title, Description, Icon: Set basic attributes for the block like title, description, and an icon to make the block recognizable in the block editor.\par
+
+\pard\sa200\sl276\slmult1\fs36 3. Fetching Books from CPT:\fs22\par
+
+\pard 
+{\pntext\f0 1.\tab}{\*\pn\pnlvlbody\pnf0\pnindent0\pnstart1\pndec{\pntxta.}}
+\fi-360\li720\sa200\sl276\slmult1 The useSelect hook is used to fetch posts from the book custom post type using WordPress's data API.\par
+{\pntext\f0 2.\tab}postType: The custom post type to fetch, which is book.\par
+{\pntext\f0 3.\tab}order and orderby: Ensures that books are displayed in descending order based on the date.\par
+
+\pard\sa200\sl276\slmult1\fs36 4. Loading and No Books Messages:\fs22\par
+
+\pard 
+{\pntext\f0 1.\tab}{\*\pn\pnlvlbody\pnf0\pnindent0\pnstart1\pndec{\pntxta.}}
+\fi-360\li720\sa200\sl276\slmult1 Displays a message when the books are still being fetched.\par
+{\pntext\f0 2.\tab}No Books Found: If no books are found, a message is shown.\par
+
+\pard\sa200\sl276\slmult1\fs36 5.Displaying Books:\fs22\par
+
+\pard 
+{\pntext\f0 1.\tab}{\*\pn\pnlvlbody\pnf0\pnindent0\pnstart1\pndec{\pntxta.}}
+\fi-360\li720\sa200\sl276\slmult1 The books are displayed using the .map() function to loop through the fetched books .\par
+{\pntext\f0 2.\tab}Since the block dynamically fetches data from the WordPress REST API, you don\rquote t need to save the actual content .\par
+
+\pard\sa200\sl276\slmult1\par
+
+\pard\sl276\slmult1\b\fs28 Q2 . E\cf1 xplain how you would register the block in PHP. \b0\par
+
+\pard\sa200\sl276\slmult1\cf0\fs22\par
+\fs36  1.Register the Block\fs22\par
+
+\pard 
+{\pntext\f0 1.\tab}{\*\pn\pnlvlbody\pnf0\pnindent0\pnstart1\pndec{\pntxta.}}
+\fi-360\li720\sa200\sl276\slmult1 Hook into WordPress's init action.\par
+{\pntext\f0 2.\tab}Use wp_register_script to register the JS  file that defines the block.\par
+{\pntext\f0 3.\tab}Use register_block_type to register the block and associate it with the script.\par
+
+\pard\sa200\sl276\slmult1\par
+
+\pard\sl276\slmult1\cf1\fs24\par
+
+\pard\sl276\slmult1\b\fs28 Q3. Provide the PHP code required for registering the block. \par
+
+\pard\sa200\sl276\slmult1\cf0\b0\fs22\par
+
+\pard\sa200\sl276\slmult1  add_action( 'init', 'book_gutenberg_default_colors' );\par
+ add_action('init' ,'book_gutenberg_blocks' );\par
+ function book_gutenberg_blocks()\{\par
+
+\pard\ri-448\sa200\sl276\slmult1\tab wp_register_script('custom-block-js',get_template_directory_uri(). '/build/index.js',array('wp-blocks'));\par
+
+\pard\sa200\sl276\slmult1\tab register_block_type('book/custom-cpt-book',array(\par
+\tab\tab 'editor_script' => 'custom-block-js',\par
+\tab ));\par
+ \}\par
+\par
+
+\pard\b\fs28 Q4.\cf1\f1 Outline how you would structure the JavaScript for the block (you don\rquote t need to write full JavaScript code, but describe the key components). \b0\fs23\par
+
+\pard\sa200\sl276\slmult1\cf0\f0\fs22\par
+// Register the block\par
+const \{ registerBlockType \} = wp.blocks;\par
+// Define the block\par
+registerBlockType('book/custom-cpt-book', \{\par
+    // Built-in Attributes (title, icon, category)\par
+    title: 'Books',\par
+    description: 'CPT Books',\par
+    icon: 'book-alt',\par
+    category: 'layout',\par
+    // Custom Attributes ()\par
+    attributes: \{ \},\par
+    // Built-in function: Edit\par
+    edit() \{ \},\par
+    // Built-in function: Save\par
+    save() \{\}\par
+\});\par
+
+\pard\b\fs28 Q5.\cf1 Ensure the block fetches and displays the latest books dynamically. \par
+\par
+
+\pard 
+{\pntext\f0 1.\tab}{\*\pn\pnlvlbody\pnf0\pnindent0\pnstart1\pndec{\pntxta.}}
+\fi-360\li720\b0\fs22 Retrieve books from the book post type.\line\par
+{\pntext\f0 2.\tab}Query the latest books by setting order: 'desc' and orderby: 'date'.\par
+
+\pard\sa200\sl276\slmult1\cf0\par
+
+\pard\b\fs28 Q6.\cf1\f1 Describe how you would make the block customizable (e.g., selecting how many books to display). \cf0\b0\f0\fs22\par
+
+\pard\sa200\sl276\slmult1\par
+
+\pard 
+{\pntext\f0 1.\tab}{\*\pn\pnlvlbody\pnf0\pnindent0\pnstart1\pndec{\pntxta.}}
+\fi-360\li720\sa200\sl276\slmult1 Register the Block with Custom Attributes\par
+{\pntext\f0 2.\tab}Define attributes inside registerBlockType, such as numberOfBooks to control how many books to display.\par
+{\pntext\f0 3.\tab}Modify the API query to use attributes.numberOfBooks as a dynamic parameter.\par
+{\pntext\f0 4.\tab}Handle the Save Function\par
+
+\pard\sa200\sl276\slmult1\par
+\par
+\par
+\par
+\par
+\par
+\par
+\par
+\par
+\par
+\par
+\par
+\par
+php\par
+Copy\par
+Edit\par
+\par
+\par
+\par
+\par
+\cf1\f1\fs23 Describe the steps needed to create a \b custom Gutenberg block \par
+1. functions.php \f2\endash  Register the Gutenberg Block\par
+\par
+In your theme or plugin, you need to use the functions.php file to register the custom Gutenberg block.\par
+You will register the block script and block type in the PHP file.\par
+wp_register_script is used to load the custom JavaScript for the block.\par
+register_block_type is used to register the block and link the block with its JavaScript functionality.\par
+\par
+2. Create a Custom JS File for the Block\f1\par
+Inside your js folder theme, create a custom JavaScript file (e.g., block.js).\par
+This file will contain the JavaScript code that defines how your Gutenberg block works.\par
+fucntion.php required a new custom file to register the guterberg .\par
+\par
+3. Register the Block with registerBlockType\par
+In your block.js, you use the registerBlockType function to define your block.\par
+Inside registerBlockType, you will define:\par
+Built-in attributes: These are attributes such as description, title, icon, and category.\par
+Custom attributes: These are specific attributes such as text, textarea, background image, etc., which are part of your block's state.\par
+Custom functions: Functions that are used for manipulating the block data, but aren\rquote t directly related to WordPress. You may handle things like fetching custom data (e.g., list of books) or manipulating data to be shown in the block.\par
+Built-in functions: These handle the core functionality of your block, like handling the block's content, structure, and editing experience in Gutenberg.\par
+\par
+\par
+\par
+\par
+\par
+\par
+\par
+inside the js folder create new custom block js \par
+\par
+insdie the js write registerBlockType  inside the register block type we add all the custom fucntion , all the logics , all the edits , all attributes , \par
+\par
+\par
+nside the registe rblock we can specify the \par
+\par
+inside the block type , \par
+\par
+built in attribute , (desciption , title , icon, cateogyr )\par
+custom attribute , ( text , textare , backgorund iamge , )\par
+custom function (not related to wordpress , its not part of the register block ,spcify all the date to manipulate ,  etc )\par
+built function , \par
+\par
+\par
+/*Registe js into PHP block , */\par
+\par
+wp_register_script - regiser the script we need wp.blocks library \par
+register_block_type - register the block type , \par
+\par
+\par
+\par
+\par
+\par
+}
+ 
